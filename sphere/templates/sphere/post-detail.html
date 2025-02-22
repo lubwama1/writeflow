@@ -1,0 +1,308 @@
+{% extends 'sphere/base.html' %} {% load crispy_forms_tags %} {% block content %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% block title %}
+      <title>WriteFlow | post-detail</title>
+    {% endblock title %}
+    <style>
+      .card:hover h5 {
+        visibility: visible !important;
+        opacity: 1 !important;
+        color: inherit !important;
+      }
+      .reaction-btn {
+        background: transparent;
+        padding: 4px;
+      }
+      .reaction-btn:hover {
+        border: 1px solid #007bff;
+        background: none;
+      }
+      .like-btn {
+        border: none;
+        background: none;
+        outline: none !important;
+        box-shadow: none !important;
+        cursor: pointer;
+      }
+      .like-btn:hover {
+        background: none;
+      }
+      /* Remove background, border, and outline from buttons */
+      button,
+      .like-btn,
+      .comment-btn {
+        background: none !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+      }
+
+      /* Ensure no focus effect when clicking */
+      button:focus,
+      button:active,
+      .like-btn:focus,
+      .like-btn:active,
+      .comment-btn:focus,
+      .comment-btn:active {
+        background: none !important;
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+      }
+
+      /* Ensure the icons inside buttons don't get a background */
+      button i,
+      .like-btn i,
+      .comment-btn i {
+        background: none !important;
+      }
+      .comment {
+        margin-bottom: 10px !important;
+      }
+
+      /* Ensure the action buttons are placed below the date */
+      .action-container {
+        margin-top: 5px;
+      }
+
+      /* Optional: add spacing between the like button and reply link */
+      .action-container button,
+      .action-container a {
+        margin-right: 10px;
+      }
+      .author-image {
+        border-radius: 5px;
+        width: 40px;
+        height: 40px;
+        transform: translateY(15px) !important;
+        object-fit: cover;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-12">
+          <div class="card mb-4">
+            <div class="card-body">
+              <!-- Post Title -->
+              <h5 class="card-title text-center text-muted">
+                {{ post.title }}
+              </h5>
+
+              <!-- Post Content -->
+              <p class="card-text">{{ post.content }}</p>
+
+              <!-- Like Button -->
+              <div class="btn-group">
+                <form method="POST" id="like-form-{{ post.id }}">
+                  {% csrf_token %}
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger like-btn"
+                    onclick="toggleLike()"
+                    id="btn-trigger"
+                  >
+                    <i
+                      class="fa fa-thumbs-up icon"
+                      style="color: {% if request.user in post.likes.all %}#007bff{% else %}grey{% endif %}; font-size: 15px; border: none;"
+                    ></i>
+                    <span
+                      id="like-count-{{ post.id }}"
+                      style="color: #007bff"
+                      class="count"
+                      >{{ likes }}</span
+                    >
+                  </button>
+                </form>
+              </div>
+              <div class="btn-group">
+                <button
+                  type="button"
+                  class="btn btn-outline-info mx-2 rounded-2 comment-btn border-0"
+                  onclick="toggleCommentForm()"
+                >
+                  <i
+                    class="fas fa-comment"
+                    style="font-size: 20px; border: none; color: #6c757d"
+                  ></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comment Form -->
+          <div
+            id="comment-form-container"
+            style="display: none; margin-top: 20px"
+          >
+            <form method="POST" id="comment-form">
+              {% csrf_token %} {{ comment_form.as_p }}
+              <div class="text-center">
+                <button
+                  type="submit"
+                  class="btn btn-secondary text-white w-50 mb-2"
+                >
+                  Comment
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Comment Section -->
+           <div class="comments mt-3" id="comment-section">
+            <h6>Comments:</h6>
+            {% for comment  in comments %}
+              <div class="comment-container">
+                <div class="author-image">
+                  {% if comment.author.profile %}
+                    <a href="{% url 'users:author_profile' comment.author.id %}"><img
+                      src="{{ comment.author.profile.image.url }}"
+                      class="rounded-circle author-image"
+                      alt="{{ post.author.username }}"
+                    /></a>
+                  {% else %}
+                    <a href="{% url 'users:author_profile' comment.author.id %}"><img
+                      src="http://localhost:8000/media/default.jpg"
+                      class="rounded-circle author-image"
+                      alt="default image"
+                    /></a>
+                  {% endif %}
+                </div>
+                  <strong class="mx-5">{{ comment.author }}</strong>
+                  <p class="mt-2">{{ comment.content }}</p>
+                  <small class="text-muted">{{ comment.created_at|timesince }} ago</small>
+              </div>
+              <!-- Container for buttons under the date -->
+              <div class="action-container">
+                <!-- Like Button for each comment -->
+                <form method="POST" id="comment-like-form-{{ comment.id }}" class="d-inline">
+                  {% csrf_token %}
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger"
+                    onclick="toggleCommentLike({{ comment.id }})"
+                  >
+                    <i
+                      class="fa fa-thumbs-up"
+                      style="color: {% if user in comment.likes.all %}#007bff{% else %}grey{% endif %}; font-size: 20px;"
+                    ></i>
+                    <span
+                      id="comment-like-count-{{ comment.id }}"
+                      style="color: #007bff"
+                    >
+                      {{ comment.likes.count }}
+                    </span>
+                  </button>
+                </form>
+            
+                <!-- Reply functionality -->
+                <a
+                  href="{% url 'sphere:reply' pk=comment.id %}"
+                  class="btn btn-outline-secondary btn-sm border-0"
+                >
+                  <i class="fas fa-reply" style="font-size: 1rem"></i> Reply
+                </a>
+              </div>
+            </div>
+            
+            {% empty %}
+            <p>No comments yet. Be the first to comment!</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Toggle the visibility of the comment form
+      function toggleCommentForm() {
+        const commentForm = document.getElementById("comment-form-container");
+        if (commentForm.style.display === "none") {
+          commentForm.style.display = "block";
+        } else {
+          commentForm.style.display = "none";
+        }
+      }
+
+      // AJAX to handle like/unlike functionality for post
+      function toggleLike() {
+        const csrfToken = document.querySelector(
+          "[name=csrfmiddlewaretoken]"
+        ).value;
+        const postId = "{{ post.id }}";
+        fetch(
+          "{% url 'sphere:post-detail' pk=post.id %}".replace(
+            "post.id",
+            postId
+          ),
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": csrfToken,
+            },
+            body: JSON.stringify({ action: "toggle_like" }),
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              // Update the like icon and count dynamically
+              const likeIcon = document.querySelector(`#like-form-${postId} i`);
+              const likeCount = document.getElementById(`like-count-${postId}`);
+
+              likeIcon.style.color = data.liked ? "#007bff" : "grey";
+              likeCount.textContent = data.likes;
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      // AJAX to handle comment like/unlike functionality
+      function toggleCommentLike(commentId) {
+        const csrfToken = document.querySelector(
+          "[name=csrfmiddlewaretoken]"
+        ).value;
+        fetch(
+          "{% url 'sphere:post-detail' pk=post.id %}".replace(
+            "post.id",
+            "{{ post.id }}"
+          ),
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": csrfToken,
+            },
+            body: JSON.stringify({
+              action: "toggle_comment_like",
+              comment_id: commentId,
+            }),
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              // Update the like icon and count dynamically for the specific comment
+              const likeIcon = document.querySelector(
+                `#comment-like-form-${commentId} i`
+              );
+              const likeCount = document.getElementById(
+                `comment-like-count-${commentId}`
+              );
+
+              likeIcon.style.color = data.liked ? "#007bff" : "grey";
+              likeCount.textContent = data.likes;
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+    </script>
+  </body>
+</html>
+
+{% endblock content %}

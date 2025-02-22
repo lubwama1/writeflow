@@ -1,0 +1,20 @@
+
+{% extends 'sphere/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="btn-group">
+            <a href="{% account_login %}" class="licks">
+                <i class="fab fa-google"></i> Sign In 
+            </a>
+            <a href="{% account_signup %}" class="licks">
+                <i class="fab fa-github"></i> Sign Up
+            </a>
+        </div>
+        <div>
+            <h2>Verify Your Email Address</h2>
+            <p> We have sent an email to you for verification. Follow the link provided to finalize the signup process. If you do not see the verification email in your main inbox, check your spam folder. Please contact us if you do not receive the verification email within a few minutes.</p>
+        </div>
+    </div>
+{% endblock content %}
+    

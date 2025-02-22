@@ -1,0 +1,64 @@
+
+
+{% extends 'sphere/base.html' %} {% block content %}
+<style>
+
+</style>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header text-white">
+          <h5 class="mb-0"><marquee behavior="" direction="right">Welcome, {{ user.username }}</marquee></h5>
+        </div>
+        <div class="card-body">
+          <h2 class="card-title">My Account</h2>
+          <p class="card-text">
+            Here you can view and edit your account information.
+          </p>
+          <div class="list-group">
+            {% comment %} <a
+              href="{% url 'users:profile' %}"
+              class="list-group-item list-group-item-action"
+              ><i class="fas fa-user-circle mr-2"></i> Profile</a
+            > {% endcomment %}
+            <a href="{% url 'users:profile' username=request.user.username %}" class="list-group-item list-group-item-action"><i class="fas fa-user-circle mr-2"></i> Profile</a>
+
+            <a href="{% url 'password_reset' %}" class="list-group-item list-group-item-action"
+              ><i class="fa fa-lock mr-2"></i> Change Password</a
+            >
+            <a href="#" class="list-group-item list-group-item-action"
+              ><i class="fa fa-at mr-2"></i> Change Email</a
+            >
+            <a href="#" class="list-group-item list-group-item-action"
+              ><i class="fa fa-link mr-2"></i> Account Connection</a
+            >
+            
+            {% if request.user.is_superuser %}
+              <a href="{% url 'admin:index' %}" class="list-group-item list-group-item-action"
+            ><i class="fa fa-link mr-2"></i> Admin panel</a>
+            {% endif %}
+          </div>
+          <h2 class="mt-4">Settings</h2>
+          <div class="list-group">
+            <a href="{% url 'sphere:notifications' %}" class="list-group-item list-group-item-action">
+              <i class="fas fa-bell mr-2"></i> Notification
+            </a>
+            
+            <a
+              href="account_logout"
+              class="sign-out-btn mt-2 text-center"
+              ><span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <i class="fas fa-sign-out-alt mr-2"></i> Sign out
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+

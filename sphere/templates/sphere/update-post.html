@@ -1,0 +1,60 @@
+{% extends 'sphere/base.html' %} {% load crispy_forms_tags %} {% block content %}
+<style>
+  .custom-input {
+    width: 100%;
+    height: auto;
+  }
+  .title-input {
+    width: 100%;
+  }
+</style>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-6">
+      <div class="card shadow-lg mt-4">
+        <legend class="border-bottom mb-4 text-center text-muted txt">
+          Edit Post
+        </legend>
+        <p class="text-center text-muted">
+          Update the content of your blog post below. You can change the title,
+          body, or any other content that was previously submitted. Once you're
+          done, click the <strong>Update Post</strong> button to save your 
+          changes.
+        </p>
+        <div class="card-body">
+          <fieldset>
+            <form
+              method="post"
+              class="needs-validation"
+              novalidate
+              action=""
+              enctype="multipart/form-data"
+            >
+              {% csrf_token %} {{ form|crispy }}
+              <div class="d-flex justify-content-between mt-4 gap-2">
+                <a
+                  href="{% url 'sphere:create-post' %}"
+                  class="btn btn-secondary btn-sm btn-lg w-50"
+                >
+                  <i class="fas fa-times-circle"></i> Cancel
+                </a>
+                <button
+                  type="submit"
+                  class="btn btn-secondary btn-sm btn-lg w-50"
+                >
+                  <i class="fas fa-save"></i> Update Post
+                </button>
+              </div>
+            </form>
+          </fieldset>
+          <br />
+          <p class="text-center text-muted">
+            If you want to cancel and go back without making changes, you can
+            simply navigate away from this page or close the tab.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

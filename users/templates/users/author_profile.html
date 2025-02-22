@@ -1,0 +1,72 @@
+{% extends "sphere/base.html" %}
+
+{% block content %}
+<style>
+    .card:hover {
+        transform: none;
+    }
+    .author-image {
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 1/1;
+        object-fit: contain;
+        opacity: 0;
+        transform: translateY(30px); /* Initially move the image down */
+        animation: slideIn 2s ease-out forwards; /* Apply the slideIn animation */
+      }
+    @keyframes slideIn {
+        0% {
+            opacity: 0;
+            transform: translateY(30px); /* Start from below */
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0); /* Start from below */
+        }
+    }
+</style>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Left panel: Profile Information -->
+                            <div class="col-md-4 col-lg-6">
+                                <div class="card-text">
+                                    <h3>Profile Information</h3>
+                                    
+                                    {% if author %}
+                                        <p><strong>Username:</strong> {{ author.username }}</p>
+                                        <p><strong>Email:</strong> {{ author.email }}</p>
+                                        <!-- Display the author's image if available -->
+                                        <img src="{{ author.profile.image.url }}" alt="{{ author.username }}'s image" class="img-fluid rounded author-image">
+                                    {% endif %}
+                                    
+                                </div>
+                            </div>
+
+                            <!-- Right panel: Posts -->
+                            <div class="col-md-8 col-lg-6">
+                                <div class="card-text">
+                                    <h3>Posts</h3>
+                                    {% for post in posts %}
+                                        <div class="post">
+                                            <h4>{{ post.title }}</h4>
+                                            <p>{{ post.content|slice:":150" }}...</p>
+                                            <a href="{% url 'sphere:post-detail' pk=post.id %}" class="btn btn-primary">Read more</a>
+                                        </div>
+                                        <hr>
+                                    {% empty %}
+                                        <p>No posts by this author yet.</p>
+                                    {% endfor %}
+                                    <div>{% include "sphere/paginator.html" %}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

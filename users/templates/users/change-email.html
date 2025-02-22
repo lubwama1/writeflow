@@ -1,0 +1,73 @@
+{% extends 'sphere/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<style>
+    .email-container {
+        width: 100%;
+        padding: 30px;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+    }
+    .email-styles{
+        padding: 10px;
+        width: 100%;
+    }
+    form-label{
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+    .email-styles input[type="email"]{
+        width: 100%;
+        padding: 5px;
+        font-size: 16px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        background: #555;
+        color: #fff;
+    }
+    .secondary{
+        background:#3E6E70;
+        padding: 5px;
+        color: #fff;
+    }
+    .secondary:hover{
+        background: transparent;
+        color: #fff;
+        cursor: pointer;
+    }
+</style>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="email-container">
+                        <fieldset>
+                            <h5 class="text-center mb-4">Change Your Email</h5>
+                            <form action="{% url 'users:change-email' %}" method="post">
+                                {% csrf_token %}
+                                <div class="mb-3 email-styles">
+                                    <label for="id_new_email" class="form-label">New Email</label>
+                                    {{ form.new_email }}
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn w-100 secondary rounded-pill">
+                                        Change Email
+                                    </button>
+                                </div>
+                            </form>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

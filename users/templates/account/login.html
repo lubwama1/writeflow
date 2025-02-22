@@ -1,0 +1,126 @@
+{% extends 'sphere/base.html' %}
+{% load socialaccount %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    {% block title %}
+        <title>WriteFlow | login</title>
+    {% endblock title %}
+    <style>
+        label {
+            width: 70%;
+            border: transparent;
+            transform: translateY(1px);
+            transition: transform 300ms;
+            padding: 2px 1px;
+            margin-bottom: 12px;
+        }
+        input[type="text"] {
+            outline: none;
+            border: 1px solid #fff;
+            border-radius: 0px;
+        }
+        input[type="password"] {
+            outline: none;
+            border: 1px solid #fff;
+            border-radius: 0px;
+            padding: 6px 5px;
+        }
+        label:has(+ input:placeholder-shown) {
+            transform: translateY(14px);
+        }
+          .login-btn {
+            padding: 6px 5px;
+            border-radius: 0px;
+          }
+          .licks {
+
+            padding: 6px 5px;
+          }
+          .btn-groups {
+            margin: 0 auto; /* Centers in block containers */
+            text-align: center; /* Centers text */
+        }
+        
+       .checkbox {
+        margin-left: 20px;
+       }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12 col-lg-8">
+                <div class="card">
+                    
+                    <div class="card-body">
+                        {% if messages %}
+                            <ul class="messages">
+                                {% for message in messages %}
+                                    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                                        {{ message }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    
+                            
+                        <legend class="mb-4 text-center text-muted">
+                            SIGN IN HERE
+                        </legend>
+                        <form action="{% url 'account_login' %}" method="post" class="mb-4" autocomplete="off"> 
+                            {% csrf_token %}
+                            <div class="login-container">
+                                <div class="login-form">
+                                    {{ form|crispy }}
+                                    <div class="login-b">
+                                        <button type="submit" class="login-btn">Sign in</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </form>
+                        
+                        <div class="or-divider w-50 m-auto text-center">Or</div>
+
+                        <div class="btn-groups w-50">
+                            <a href="{% provider_login_url 'google' %}" class="licks">
+                                <i class="fab fa-google"></i> Sign in with Google
+                            </a>
+                            <a href="{% provider_login_url 'github' %}" class="licks">
+                                <i class="fab fa-github"></i> Sign in with GitHub
+                            </a>
+                        </div>
+                        <div class="mt-1 text-center">
+                            <small>
+                                New on WriteFlow?
+                                <a href="{% url 'account_signup' %}" class="CA"
+                                >Create Account <i class="fas fa-arrow-right"></i
+                                ></a>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% comment %} <script>
+        const togglePassword = document.getElementById("togglePassword");
+        const password = document.getElementById("password");
+        togglePassword.addEventListener("click", function() {
+            const type = password.type == "password" ? "text" : "password";
+            password.type = type;
+            this.classList.toggle("fa-eye-slash");
+        })
+    </script> {% endcomment %}
+</body>
+</html>
+
+{% endblock content %}

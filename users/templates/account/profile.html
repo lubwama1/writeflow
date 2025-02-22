@@ -1,0 +1,145 @@
+{% extends 'sphere/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<style>
+  .img-profile {
+    width: 100%;
+    height: 100%;
+    height: auto;
+    object-fit: cover;
+
+  }
+
+  .left-panel, .center-panel, .right-panel {
+    padding: 20px;
+  }
+
+  .card-body {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .panel-title {
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #007bff;
+  }
+
+  .panel-content {
+    font-size: 1.1rem;
+  }
+
+  .form-group input, .form-group select {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+
+  .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+
+  .btn-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
+  .btn-container .btn {
+    width: 48%;
+  }
+
+  .card {
+    background-color: transparent; /* Transparent white background */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-body {
+    background-color: transparent; /* Slight transparency for content */
+    border-radius: 10px;
+  }
+
+  marquee {
+    color: #007bff;
+    font-style: italic;
+  }
+</style>
+
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <!-- Profile Picture Column -->
+            <div class="col-md-4 text-center">
+              <h5 class="panel-title">Profile Picture</h5>
+              {% if profile_instance.image %}
+              <img src="{{ profile_instance.image.url }}" alt="profile image" class="img-fluid rounded shadow-sm img-profile" />
+              {% else %}
+              <p>No profile image available.</p>
+              {% endif %}
+            </div>
+
+            <!-- Personal Information Column -->
+            <div class="col-md-4">
+              <h5 class="panel-title">Personal Information</h5>
+              {% if profile %}
+              {% with full_name=profile.first_name|add:" "|add:profile.last_name %}
+              <p class="panel-content"><strong>Full Name:</strong> {{ full_name }}</p>
+              {% endwith %}
+              <p class="panel-content"><strong>Email:</strong> {{ user.email }}</p>
+              <p class="panel-content"><strong>Birth Date:</strong> {{ profile_instance.birth_date }}</p>
+              <p class="panel-content"><strong>Gender:</strong> {{ profile_instance.gender }}</p>
+              <p class="panel-content"><strong>Username:</strong> {{ request.user.username }}</p>
+              {% endif %}
+            </div>
+
+            <!-- Update Profile Form Column -->
+            <div class="col-md-4">
+              <h5 class="panel-title">Update Profile</h5>
+              <form method="post" class="p-4 rounded" style="background: rgba(51, 51, 51, 0.7); color: white;" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="first_name">First Name</label>
+                  {{ form.first_name }}
+                </div>
+                <div class="form-group">
+                  <label for="last_name">Last Name</label>
+                  {{ form.last_name }}
+                </div>
+                <div class="form-group">
+                  <label for="birth_date">Birth Date</label>
+                  {{ form.birth_date }}
+                </div>
+                <div class="form-group">
+                  <label for="gender">Gender</label>
+                  {{ form.gender }}
+                </div>
+                <div class="form-group">
+                  <label for="image">Profile Image</label>
+                  {{ form.image }}
+                </div>
+                <div class="btn-container">
+                  <button type="submit" class="btn btn-secondary btn-sm"><i class="fas fa-save"></i> Update</button>
+                  <a href="{% url 'users:account' %}" class="btn btn-warning btn-sm"><i class="fas fa-times"></i> Cancel</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

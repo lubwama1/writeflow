@@ -1,0 +1,64 @@
+{% extends 'sphere/base.html' %} {% block content %}
+<style>
+
+</style>
+<div class="container my-5">
+  <div class="text-center mb-4">
+    <h2 class="fw-bold">About WriteFlow</h2>
+    <p class="text-muted">
+      WriteFlow is your go-to platform for sharing stories, exchanging ideas,
+      and connecting with like-minded individuals. It's more than just a
+      blog—it's a community where creativity, knowledge, and inspiration thrive.
+    </p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <img
+        src="http://localhost:8000/media/WriteFlow (2).png"
+        alt="About Us Image"
+        class="img-fluid rounded shadow-sm about-img"
+      />
+    </div>
+    <div class="col-md-6">
+      <h3 class="fw-bold mb-3">Our Mission</h3>
+      <p>
+        At WriteFlow, our mission is to provide a platform where people can
+        freely express their ideas, learn from others, and create meaningful
+        connections. Whether you're here to share your experiences, discover new
+        perspectives, or simply find inspiration, WriteFlow is here for you.
+      </p>
+      <h3 class="fw-bold mb-3">What We Offer</h3>
+      <ul class="list-unstyled">
+        <li>
+          <i class="fas fa-check text-success me-2"></i> A platform to create
+          and share your own blog posts.
+        </li>
+        <li>
+          <i class="fas fa-check text-success me-2"></i> An engaged community of
+          readers and writers.
+        </li>
+        <li>
+          <i class="fas fa-check text-success me-2"></i> Opportunities to learn,
+          grow, and inspire others.
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="text-center mt-5">
+    <h4 class="fw-bold">Join the Community</h4>
+    <p>
+      Start your journey with Public Blog today! Whether you're a reader,
+      writer, or both, there's a place for you here. Together, let's make ideas
+      flourish.
+    </p>
+    <a
+      href="{% url 'sphere:create-post' %}"
+      class="btn btn-secondary"
+    >
+      <i class="fa fa-plus"></i> Create Your First Post
+    </a>
+  </div>
+</div>
+{% endblock content %}

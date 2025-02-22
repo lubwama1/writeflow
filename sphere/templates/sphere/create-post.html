@@ -1,0 +1,196 @@
+{% extends 'sphere/base.html' %} {% load crispy_forms_tags %} {% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    {% block title %}
+      <title>WriteFlow | create-post</title>
+    {% endblock title %}
+      
+    <style>
+      .see-moreBtn {
+        border: none;
+        margin: 0 20px;
+        margin-bottom: 5px;
+        background: transparent;
+        color: #fff;
+      }
+      .see-moreBtn:hover {
+        color: rgb(43, 131, 240);
+        font-family: "Playwrite IS", cursive;
+        background: transparent;
+      }
+      .custom-input {
+        background: transparent;
+      }
+      .title-input {
+        background: transparent;
+      }
+      .custom-input {
+        width: 100%;
+        height: auto;
+      }
+      .title-input {
+        width: 100%;
+      }
+  </style>
+  </head>
+  <body>
+    <div class="container mt-2">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-12">
+          <div class="card-header bg-transparent text-center">
+            <h5 class="info mb-4 text-muted">
+              Add More Posts or Create New Ones
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <!-- left panel -->
+              <div class="col-md-4 col-lg-6">
+                {% if posts %}
+                <h5 class="text-center text-success mb-3">Recent Posts</h5>
+                {% for post in posts %} {% if request.user == post.author %}
+                <div
+                  class="post-item mb-4 {% if forloop.counter > 1 %}hidden-posts{% else %}show-less{% endif %}"
+                >
+                  <strong>Author: {{ post.author }}</strong>
+                  <p><strong>Title:</strong> {{ post.title }}</p>
+                  <p class="text-muted small mb-1">
+                    <strong>Published on:</strong> {{ post.created_at|timesince }}
+                    ago
+                  </p>
+                  <span class="badge bg-success">
+                    {{ post.published|yesno:"Published, Draft" }}
+                  </span>
+                  <p>
+                  <hr />
+                  {% if post.author == request.user %}
+                  <div class="d-flex justify-content-between">
+                    <a
+                      href="{% url 'sphere:update-post' pk=post.id %}"
+                      class="btn btn-outline-secondary btn-sm float-left"
+                    >
+                      <i class="fas fa-edit"></i> Update
+                    </a>
+                    <a
+                      href="{% url 'sphere:delete-post' pk=post.id %}"
+                      class="btn btn-outline-danger btn-sm text-white"
+                    >
+                      <i class="fas fa-trash"></i> Delete
+                    </a>
+                  </div>
+
+                  {% endif %}
+                  <hr />
+                </div>
+                {% endif %} {% endfor %}
+                <div class="btn-group">
+                  <div class="text-center">
+                    <button id="see-more-btn" class="btn-md see-moreBtn">
+                      See More
+                    </button>
+                  </div>
+                  <div class="text-center">
+                    <button
+                      id="see-less-btn"
+                      class="btn-md see-moreBtn"
+                      style="display: none"
+                    >
+                      See Less
+                    </button>
+                  </div>
+                </div>
+
+                {% else %}
+                <p class="text-center text-warning">No posts available!</p>
+                {% endif %}
+              </div>
+              <!-- Right panel -->
+              <div class="col-md-4 col-lg-6">
+                <fieldset>
+                  <legend class="text-center mb-4 text-muted">
+                    Create New Post
+                  </legend>
+                  <form
+                    method="post"
+                    class="needs-validation"
+                    novalidate
+                    action="{% url 'sphere:create-post' %}"
+                    enctype="multipart/form-data"
+                  >
+                    {% csrf_token %}
+                    <div class="form-group">
+                      <label for="id_title">Title</label>
+                      {{ form.title }}
+                    </div>
+                    <div class="form-group">
+                      <label for="id_content">Content</label>
+                      {{ form.content }}
+                    </div>
+                    <div class="form-group">
+                      <label for="id_published">Published</label>
+                      {{ form.published }}
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                      <button
+                        type="submit"
+                        class="btn btn-secondary btn-sm btn-lg text-white mb-2"
+                      >
+                        <i class="fas fa-pencil-alt"></i> Create Post
+                      </button>
+                    </div>
+                  </form>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let postCount = 1; // Initially show 1 posts
+      const posts = document.querySelectorAll(".post-item"); // All post items
+      const seeMoreBtn = document.getElementById("see-more-btn");
+      const seeLessBtn = document.getElementById("see-less-btn");
+
+      // Initially show the first 2 posts
+      function updatePostsVisibility() {
+        posts.forEach((post, index) => {
+          if (index < postCount) {
+            post.style.display = "block"; // Show post
+          } else {
+            post.style.display = "none"; // Hide post
+          }
+        });
+      }
+
+      // "See More" button click handler
+      seeMoreBtn.addEventListener("click", function () {
+        postCount += 1; // Show 1 more posts
+        updatePostsVisibility(); // Update post visibility
+        if (postCount >= posts.length) {
+          seeMoreBtn.style.display = "none"; // Hide "See More" button when all posts are visible
+        }
+        seeLessBtn.style.display = "inline-block"; // Show "See Less" button
+      });
+
+      // "See Less" button click handler
+      seeLessBtn.addEventListener("click", function () {
+        postCount = 1; // Reset to show only 1 posts
+        updatePostsVisibility(); // Update post visibility
+        seeMoreBtn.style.display = "inline-block"; // Show "See More" button again
+        this.style.display = "none"; // Hide "See Less" button
+      });
+
+      // Initial visibility setup
+      updatePostsVisibility();
+    </script>
+  </body>
+</html>
+{% endblock content %}

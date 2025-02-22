@@ -1,0 +1,22 @@
+{% extends "sphere/base.html" %}
+
+{% block content %}
+<style>
+    h1  {
+        font-family: "Edu AU VIC WA NT Pre", serif
+    }
+</style>
+<div class="container text-center">
+    <h1>Sign In with {{ provider.name }}</h1>
+    <p>You are about to sign in using <strong>{{ provider.name }}</strong>.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="d-flex justify-content-center gap-3">
+            <button type="submit" class="btn btn-outline-primary left">Continue</button>
+    <a href="{% url 'account_login' %}" class="btn btn-outline-secondary">Back to Login</a>
+        </div>
+        
+    </form>
+</div>
+{% endblock %}

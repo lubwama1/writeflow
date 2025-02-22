@@ -1,0 +1,84 @@
+{% extends 'sphere/base.html' %} {% block content %}
+<style>
+  .welcom-note {
+    font-family: "Shadows Into Light", cursive;
+    font-family: "Butterfly_kids", cursive;
+  }  
+  .author-image {
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    transform: translateY(43px) !important;
+  }
+</style>
+<div class="container my-4">
+  <div class="text-center mb-4">
+    <h2 class="fw-bold">
+      <marquee behavior="" direction="left"
+        >Hi there, welcome to the WriteFlow</marquee>
+    </h2>
+    <p class="text-muted welcome-note">
+      This is a space where ideas come to life, stories are shared, and
+      knowledge flows freely. Feel free to explore, comment, and contribute your
+      own thoughts. Together, we create a community of inspiration and learning!
+    </p>
+  </div>
+  <div class="d-flex justify-content-center mb-4">
+    <!-- Create Post Button -->
+    <a href="{% url 'sphere:create-post' %}" class="glow-on-hover mx-2">
+      <i class="fa fa-plus"></i> Create Post
+    </a>
+
+  </div>
+
+  <div class="row">
+    {% if posts %} {% for post in posts %}
+    <div class="col-md-6 col-lg-4 mb-4">
+      <a href="{% url 'sphere:post-detail' pk=post.id %}">
+        <div class="card shadow-sm h-100">
+          <div class="card-body d-flex flex-column">
+            {% if post.author.profile and post.author.profile.image %}
+              <img src="{{ post.author.profile.image.url }}" class="rounded-circle author-image" alt="{{ post.author.username }}">
+            {% else %}
+              <img src="http://localhost:8000/media/default.jpg" class="rounded author-image" alt="default image">
+            {% endif %}
+            <h5 class="card-title mx-5">{{ post.title }}</h5>
+            <div class="preview">
+              <p class="card-text text-truncate">
+                {{ post.content|slice:'100' }}
+              </p>
+            </div>
+            <div class="full-content">
+              <p>{{ post.content }}</p>
+            </div>
+            <div class="state">
+              <p class="text-muted small mb-1">
+                <strong>Author:</strong>
+                {{ post.full_name|default:post.author }}
+              {% comment %}<p class="text-muted small mb-1">
+                <strong>Author:</strong>
+                {{ item.full_name|default:item.post.author }} </p>  {% endcomment %}
+              <p class="text-muted small mb-1">
+                <strong>Published on:</strong> {{ post.created_at|timesince }} ago
+              </p>
+              <span class="badge bg-success"
+                >{{ post.published|yesno:"Published, Draft" }}</span
+              >
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+    {% endfor %} {% else %}
+    <div class="text-center">
+      <h5 class="text-muted">No posts available</h5>
+    </div>
+
+    {% endif %}
+    <div>{% include "sphere/paginator.html" %}</div>
+    {% comment %} {% if images %} {% for image in images %}
+    <img src="{{ image.image.url }}" alt="" class="img-thumbnail img-profile" />
+    {% endfor %} {% endif %} {% endcomment %}
+  </div>
+</div>
+{% endblock content %}

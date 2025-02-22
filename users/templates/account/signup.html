@@ -1,0 +1,120 @@
+{% extends "sphere/base.html" %} {% load crispy_forms_tags %} {% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% block title %}
+      <title>WriteFlow | Sign Up</title>
+    {% endblock title %}
+    <style>
+      label {
+          width: 70%;
+          border: none;
+          transform: translateY(1px);
+          transition: transform 300ms;
+          padding: 2px 1px;
+          margin-bottom: 12px;
+      }
+      input[type="email"], input[type="password"], input[type="text"] {
+          outline: none;
+          border: 1px solid #fff;
+          padding: 6px 5px;
+          border-radius: 0px;
+          width: 100%;
+      }
+      label:has(+ input:placeholder-shown) {
+          transform: translateY(14px);
+      }
+      .toggle-password {
+          position: absolute;
+          top: 65%; 
+          right: 10px;
+          transform: translateY(-50%);
+          cursor: pointer;
+          color: rgb(43, 131, 240);;
+        }
+        .register-btn {
+          padding: 6px 5px;
+        }
+  </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-12">
+          <div class="card">
+            <div class="card-body">
+              {% if messages %}
+                <div class="alert alert-danger">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+              {% endif %}
+
+              <fieldset>
+                <legend class="text-center text-muted">JOIN TODAY</legend>
+                <form
+                  method="POST"
+                  action="{% url 'account_signup' %}"
+                  autocomplete="off"
+                >
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <label for="id_username">{{ form.username.label }}</label>
+                    {{ form.username }}
+                  </div>
+                  <div class="form-group">
+                    <label for="id_email">{{ form.email.label }}</label>
+                    {{ form.email }}
+                  </div>
+                  <div class="form-group password-wrapper">
+                    <label for="id_password1">{{ form.password1.label }}</label>
+                    {{ form.password1 }}
+                    <span class="toggle-password"
+                      ><i class="fas fa-eye" id="togglePassword"></i
+                    ></span>
+                  </div>
+                  <div class="form-group">
+                    <label for="id_password2">{{ form.password2.label }}</label>
+                    {{ form.password2 }}
+                  </div>
+                  <div>
+                    <button type="submit" class="register-btn">
+                      Create account
+                    </button>
+                  </div>
+                  <div class="mt-2">
+                    <small>
+                      Already have an account?
+                      <a href="{% url 'account_login' %}" class="AHA"
+                        >Sign in <i class="fas fa-arrow-right"></i
+                      ></a>
+                    </small>
+                 
+                  </div>
+                </form>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const password = document.querySelector("#password");
+      const togglePassword = document.querySelector("#togglePassword");
+      togglePassword.addEventListener("click", function () {
+        console.log("Eye icon clicked");
+        const type =
+          password.getAttribute("type") == "password" ? "text" : "password";
+        password.setAttribute("type", type);
+        this.classList.toggle("fa-eye-slash");
+      });
+    </script>
+  </body>
+</html>
+
+{% endblock content %}

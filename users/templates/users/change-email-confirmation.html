@@ -1,0 +1,9 @@
+{% extends 'sphere/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <p>Hello {{ user.profile.first_name }} {{ user.profile.last_name }}</p>
+    <p>You requested to change your email address. Please click the link below to confirm the change:</p>
+    <p><a href="http://{{ domain }}{% url 'users:confirm-email-change' uid=uid token=token %}">
+        Confirm Email Change
+    </a></p>
+{% endblock content %}

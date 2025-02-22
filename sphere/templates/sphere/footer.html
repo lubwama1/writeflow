@@ -1,0 +1,91 @@
+
+<footer class="footer-bg pt-4 pb-3">
+  <div class="container">
+    <div class="row">
+      <!-- About Section -->
+      <div class="col-md-4 mb-3">
+        <h5>About Us</h5>
+        <p class="small">
+          Welcome to WriteFlow! Explore interesting articles, tutorials, and
+          stories written by our vibrant community of writers.
+        </p>
+      </div>
+      <!-- Quick Links -->
+      <div class="col-md-4 mb-3"> 
+        <h5>Quick Links</h5>
+        <ul class="list-unstyled">
+          {% if user.is_authenticated %}
+          <li>
+            <a
+              href="{% url 'sphere:home' %}"
+              class="text-light text-decoration-none"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a
+              href="{% url 'sphere:about' %}"
+              class="text-light text-decoration-none"
+              >About</a
+            >
+          </li>
+          <li>
+            <a
+              href="{% url 'sphere:contact' %}"
+              class="text-light text-decoration-none"
+              >Contact</a
+            >
+          </li>
+          {% else %}
+            
+            {% if request.path  == '/accounts/signup/' %}
+            <li>
+              <a
+                href="{% url 'account_login' %}"
+                class="text-light text-decoration-none"
+                >Login Here</a
+              >
+            </li>
+            {% else %}
+            <li>
+              <a
+                href="{% url 'account_signup' %}"
+                class="text-light text-decoration-none"
+                >Create Account</a
+              >
+            </li>
+            {% endif %}
+              
+          
+          {% endif %}
+        </ul>
+      </div>
+      <!-- Contact Section -->
+      <div class="col-md-4 mb-3">
+        <h5>Contact</h5>
+        <p class="small">
+          <i class="fas fa-envelope"></i> Email: support@writeflow.com
+        </p>
+        <p class="small">
+          <i class="fas fa-phone"></i> Phone: +971 55 108 3314
+        </p>
+        <div>
+          <a href="https://www.facebook.com/@rayncodes" class="text-light me-3"
+            ><i class="fab fa-facebook"></i
+          ></a>
+          <a href="https://github.com/@rayncodes" class="text-light me-3"
+            ><i class="fab fa-github"></i
+          ></a>
+          <a href="https://www.instagram.com/@rayncodes" class="text-light me-3"
+            ><i class="fab fa-instagram"></i
+          ></a>
+        </div>
+      </div>
+    </div>
+    <hr class="bg-secondary" />
+    <div class="text-center small">
+      &copy; 2024 WriteFlow. All rights reserved.
+      
+    </div>
+  </div>
+</footer>

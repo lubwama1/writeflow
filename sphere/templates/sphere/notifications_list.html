@@ -1,0 +1,123 @@
+{% extends 'sphere/base.html' %}
+
+{% block content %}
+<style>
+    .see-moreBtn:hover {
+        color: rgb(43, 131, 240);
+        font-family: "Playwrite IS", cursive;
+        background: transparent;
+    }
+    .see-moreBtn {
+        border: none;
+        margin: 0 20px;
+        margin-bottom: 5px;
+        background: transparent;
+        color: #fff;
+    }
+    .notification-item {
+        margin-bottom: 5px !important;  /* Reduce margin */
+        padding: 8px 12px !important;  /* Adjust padding */
+        border-bottom: 1px solid #ddd; /* Add subtle separator */
+    }
+    .list-group-item {
+        padding: 8px 10px !important;  /* Reduce Bootstrap default padding */
+    }
+    .-card:hover{
+        transform: none;
+    }
+
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm -card">
+                <div class="card-header bg-primary text-white">
+                    <h4>Notifications</h4>
+                    
+                </div>
+                <div class="card-body">
+                    {% if notifications %}
+                        <ul class="list-group">
+                            {% for notification in notifications %}
+                                <li class="list-group-item d-flex justify-content-between align-items-start notification-item mb-4">
+                                    <div>
+                                        <h6 class="mb-1 text-primary">{{ notification.verb }}</h6>
+                                        <p class="text-muted mb-0">{{ notification.description }}</p>
+                                        <small class="text-secondary">{{ notification.timestamp|timesince }} ago</small>
+                                    </div>
+                                    <a href="{{ notification.notification_url }}">View</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                       <!-- <div class="btn-group">
+                            <button id="see-more-btn" class="btn-md see-moreBtn">See More</button>
+                            <button id="see-less-btn" class="btn-md see-moreBtn" style="display:none;">See Less</button>
+                        </div> -->
+                    {% else %}
+                        <p class="text-center text-muted">No notifications available.</p>
+                    {% endif %}
+                    <div>{% include "sphere/not-pag.html" %}</div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /*document.addEventListener("DOMContentLoaded", function () {
+        let page = 1;  // Track the current page
+        const seeMoreBtn = document.getElementById("see-more-btn");
+        const seeLessBtn = document.getElementById("see-less-btn");
+        const notificationsContainer = document.querySelector(".list-group");
+
+        function loadNotifications() {
+            fetch(`/notifications?page=${page}`, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+                .then(response => response.json())
+                .then(data => {
+                    data.notifications.forEach(notification => {
+                        const li = document.createElement("li");
+                        li.className = "list-group-item d-flex justify-content-between align-items-start notification-item mb-4";
+                        li.innerHTML = `
+                            <div>
+                                <h6 class="mb-1 text-primary">${notification.verb}</h6>
+                                <p class="text-muted mb-0">${notification.description}</p>
+                                <small class="text-secondary">${notification.timestamp}</small>
+                            </div>
+                            <a href="${notification.notification_url}">View</a>
+                        `;
+                        notificationsContainer.appendChild(li);
+                    });
+
+                    // Toggle the visibility of buttons
+                    if (data.has_next) {
+                        seeMoreBtn.style.display = "inline-block";  // Show "See More" if there are more notifications
+                        seeLessBtn.style.display = "none";  // Hide "See Less" if we haven't clicked it yet
+                    } else {
+                        seeMoreBtn.style.display = "none";  // Hide "See More" when there are no more notifications
+                        seeLessBtn.style.display = "inline-block";  // Show "See Less" when no more "See More"
+                    }
+                });
+        }
+
+        // Load the first 4 notifications initially
+        loadNotifications();
+
+        // "See More" button functionality
+        seeMoreBtn.addEventListener("click", function () {
+            page++;
+            loadNotifications();
+        });
+
+        // "See Less" button functionality (reset to first page)
+        seeLessBtn.addEventListener("click", function () {
+            page = 1;
+            notificationsContainer.innerHTML = '';  // Clear current notifications
+            loadNotifications();  // Load only the first 4 notifications
+        });
+    });*/
+</script>
+
+
+{% endblock content %}

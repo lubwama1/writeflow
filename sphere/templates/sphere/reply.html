@@ -1,0 +1,48 @@
+{% extends 'sphere/base.html' %}
+
+{% block content %}
+<div class="container d-flex flex-column align-items-center mt-4">
+    <!-- Parent comment section -->
+    <div class="card mb-3" style="width: 60%;">
+        <div class="card-body">
+            <p class="font-weight-bold">{{ comment.author.username }} said:</p>
+            <p>{{ comment.content }}</p>
+            <p class="text-muted">{{ comment.created_at|timesince }} ago</p>
+        </div>
+    </div>
+
+    <!-- Replies section -->
+    <h5>Replies</h5>
+    {% if replies %}
+        {% for reply in replies %}
+            <div class="card mb-2" style="width: 55%;">
+                <div class="card-body">
+                    <p class="font-weight-bold">{{ reply.author.username }} replied:</p>
+                    <p>{{ reply.content }}</p>
+                    <p class="text-muted">{{ reply.created_at|timesince }} ago</p>
+
+                    <!-- Like/unlike button (optional, can be added) -->
+                    <form method="post" action="{% url 'sphere:reply' reply.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-primary btn-sm">
+                            {{ reply.likes.count }} Like{{ reply.likes.count|pluralize }}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No replies yet. Be the first to reply!</p>
+    {% endif %}
+
+    <!-- Reply form section -->
+    <h5>Leave a Reply</h5>
+    <form method="post">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <div class="text-center">
+            <button type="submit" class="btn btn-secondary mb-4">Submit Reply</button>
+        </div>
+    </form>
+</div>
+{% endblock content %}

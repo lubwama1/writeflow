@@ -1,0 +1,20 @@
+
+
+{% extends 'sphere/base.html' %} {% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card mt-4 text-center">
+        <div class="card-header">{{ user.username }}</div>
+        <div class="card-body">
+          <p class="card-text">Are you sure you want to sign out?</p>
+          <p>We gonna miss you {{ user.username }}</p>
+          <a href="{% url 'aacount_logout' %}" class="btn btn-danger text-white"
+            >Sign Out</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

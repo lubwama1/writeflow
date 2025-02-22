@@ -1,0 +1,43 @@
+{% extends 'sphere/base.html' %} {% load crispy_forms_tags %} {% block content %}
+<style>
+  input[type="text"], input[type="email"] {
+    outline: none;
+    border: 1px solid #fff;
+    border-radius: 0px;
+}
+</style>
+
+<div class="container my-5">
+  <div class="contact-container">
+    <div class="contact-header">
+      <h2>Contact Us</h2>
+      <p class="text-muted">
+        Have a question, feedback, or just want to say hello? We’d love to hear
+        from you!
+      </p>
+    </div>
+    <fieldset>
+      <form method="post" action="{% url 'sphere:contact' %}">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="id_full_name">FULL NAME</label>
+          {{ form.full_name }}
+        </div>
+        <div class="form-group">
+          <label for="id_email">EMAIL ADDRESS</label>
+          {{ form.email }}
+        </div>
+        <div class="form-group">
+          <label for="id_message">MESSAGE</label>
+          {{ form.message }}
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-contact btn-sm mb-2">
+            Send Message
+          </button>
+        </div>
+      </form>
+    </fieldset>
+  </div>
+</div>
+{% endblock content %}

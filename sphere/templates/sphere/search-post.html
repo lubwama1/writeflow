@@ -1,0 +1,127 @@
+{% extends 'sphere/base.html' %}
+
+
+{% block content %}
+    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}
+        <title>WriteFlow | search-post</title>
+    {% endblock title %}
+        
+    <style>
+                /* Search form container */
+                .search-container {
+                    border-radius: 10px;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    padding: 15px 20px;
+                    margin-bottom: 20px;
+                }
+        
+                /* Input styling */
+                .search-container input[type="text"] {
+                    flex:1;
+                    width: 50%;
+                    border: 1px solid #ced4da;
+                    padding: 10px;
+                    font-size: 1rem;
+                    outline: none;
+                    transition: all 0.3s ease;
+                }
+        
+                .search-container input[type="text"]:focus {
+                    border-color: #80bdff;
+                    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+                }
+        
+                /* Search button styling */
+                .search-container .search-btn {
+                    background-color: #007bff;
+                    color: #fff;
+                    border: none;
+                    padding: 10px 20px;
+                    font-size: 1rem;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease, transform 0.2s ease;
+
+                    height: 100%; /* Ensures it matches input height */
+                }
+        
+                .search-container .search-btn:hover {
+                    background-color: #0056b3;
+                    transform: scale(1.05);
+                }
+        
+                .search-container .search-btn:active {
+                    background-color: #004085;
+                }
+                /* Ensure proper spacing and alignment */
+                .input-group input,
+                .input-group .search-btn {
+                    height: 30px; /* Explicit height to ensure consistency */
+                    margin-left: 5px;
+                }
+                .card:hover h5 {
+                    visibility: visible !important;
+                    opacity: 1 !important;
+                    color: inherit !important;
+                  }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12 col-lg-8">
+                <div class="card p-2 mb-2 bg-transparent">
+                    
+                    <!-- Search Form -->
+                    <div class="search-container">
+                        <form method="get" action="{% url 'sphere:search' %}">
+                            <div class="input-group mb-3">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="query"
+                                    value="{{ query }}"
+                                    placeholder="Search by author or title"
+                                    aria-label="Search"
+                                >
+                                <button class="search-btn" type="submit">Search</button>
+                            </div>
+                        </form>
+    
+                    </div>
+                   
+                    <!-- Display Posts -->
+                    {% if posts %}
+                        {% for post in posts %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ post.title }}</h5>
+                            <p class="card-text">{{ post.content|truncatewords:20 }}</p>
+                            <span class="badge bg-success">{{ post.published|yesno:"Published, Draft" }}</span>
+                            <div class="btn-group">
+                                <a href="{% url 'sphere:post-detail' pk=post.id %}" class="btn btn-outline-secondary btn-sm">Read more</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-center text-warning">No posts found for your search. {{ query }}</p>
+                    {% endif %}
+                    <div>
+                        {% include "sphere/paginator.html" %}
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <script>
+        let query = encodeURIComponent(document.getElementById('search-input').value);
+
+    </script>
+</body>
+</html>
+{% endblock content %}
